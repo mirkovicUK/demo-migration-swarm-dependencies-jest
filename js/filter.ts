@@ -1,4 +1,4 @@
-// js/filter.js — filter/search predicates over tasks (→ task)
+// js/filter.ts — filter/search predicates over tasks (→ task)
 
 import type { Task } from './task.js';
 
@@ -28,6 +28,6 @@ export function sortByDueDate(tasks: Task[]): Task[] {
   return [...tasks].sort((a, b) => {
     if (!a.dueDate) return 1;
     if (!b.dueDate) return -1;
-    return new Date(a.dueDate) - new Date(b.dueDate);
+    return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
   });
 }
