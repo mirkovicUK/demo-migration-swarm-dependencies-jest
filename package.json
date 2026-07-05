@@ -1,0 +1,16 @@
+{
+  "name": "demo-migration-swarm-deps",
+  "version": "1.0.0",
+  "description": "Fixed demo repository (vanilla HTML/CSS/JS, with real npm dependencies) for validating Migration Swarm's dependency-aware scaffold.",
+  "type": "module",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "date-fns": "^4.4.0",
+    "nanoid": "^5.1.16",
+    "zod": "^4.4.3"
+  }
+}

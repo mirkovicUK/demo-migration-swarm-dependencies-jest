@@ -1,0 +1,64 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: light dark;
+}
+
+body {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.column {
+  background: rgba(127, 127, 127, 0.08);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.column ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task {
+  background: canvas;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid gray;
+}
+
+.priority-high {
+  border-left-color: crimson;
+}
+.priority-medium {
+  border-left-color: darkorange;
+}
+.priority-low {
+  border-left-color: seagreen;
+}
+
+.due.overdue {
+  color: crimson;
+  font-weight: 600;
+}
+
+.error {
+  color: crimson;
+  min-height: 1.2em;
+}
