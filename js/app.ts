@@ -1,4 +1,7 @@
+// js/app.ts — DOM wiring / entry module (→ board, format, storage)
+
 import { addTask, columnView } from "./board.js";
+import type { Board } from "./board.js";
 import { relativeDueDate } from "./format.js";
 import { loadOrCreateBoard, saveBoard } from "./storage.js";
 import { BELL_ICON } from "./theme.js";
@@ -10,31 +13,28 @@ async function main(): Promise<void> {
   const form = document.querySelector("#task-form") as HTMLFormElement | null;
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
-    const formData = new FormData(form);
+    const formData = new FormData(form!);
 
     try {
       const updated = addTask(board, {
-        title: formData.get("title") as string,
-        notes: formData.get("notes") as string,
-        priority: formData.get("priority") as string,
-        dueDate:
-          formData.get("dueDate") !== ""
-            ? new Date(formData.get("dueDate") as string).toISOString()
-            : undefined,
+        title: formData.get("title"),
+        notes: formData.get("notes"),
+        priority: formData.get("priority"),
+        dueDate: formData.get("dueDate")
+          ? new Date(formData.get("dueDate") as string).toISOString()
+          : undefined,
         columnId: board.columns[0].id,
       });
       saveBoard(updated);
       render(updated);
-      form.reset();
+      form!.reset();
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : String(err);
-      showError(errorMessage);
+      showError((err as Error).message);
     }
   });
 }
 
-function render(board: import("./board.js").Board): void {
+function render(board: Board): void {
   const root = document.querySelector("#board");
   if (!root) return;
 
@@ -67,3 +67,5 @@ function showError(message: string): void {
 }
 
 main();
+
+export {};
