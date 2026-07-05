@@ -1,14 +1,16 @@
 {
-  "name": "migrated-app",
-  "version": "0.0.0",
-  "private": true,
+  "name": "demo-migration-swarm-deps",
+  "version": "1.0.0",
+  "description": "Fixed demo repository (vanilla HTML/CSS/JS, with real npm dependencies) for validating Migration Swarm's dependency-aware scaffold.",
   "type": "module",
+  "main": "js/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run"
   },
+  "license": "MIT",
   "dependencies": {
     "date-fns": "^4.4.0",
     "nanoid": "^5.1.16",
