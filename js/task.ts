@@ -4,17 +4,30 @@
 // filter.ts and board.ts.
 
 import { newId, newShortRef } from "./id.js";
-import { validateTaskInput } from "./validate.js";
-import type { Task } from './task.js';
+import { validateTaskInput, ValidateResult } from "./validate.js";
 
 export const STATUSES = ["open", "done"] as const;
 
+export interface Task {
+  id: string;
+  ref: string;
+  title: string;
+  notes: string;
+  priority: string;
+  dueDate: string | null;
+  columnId: string;
+  status: "open" | "done";
+  createdAt: string;
+  completedAt?: string;
+}
+
 export function createTask(rawInput: unknown): Task {
-  const { success, data, error } = validateTaskInput(rawInput);
-  if (!success) {
-    throw new Error(`Cannot create task: ${error}`);
+  const result: ValidateResult = validateTaskInput(rawInput);
+  if (!result.success) {
+    throw new Error(`Cannot create task: ${result.error}`);
   }
 
+  const data = result.data;
   return {
     id: newId(),
     ref: newShortRef(),
@@ -25,7 +38,7 @@ export function createTask(rawInput: unknown): Task {
     columnId: data.columnId,
     status: "open",
     createdAt: new Date().toISOString(),
-  } as Task;
+  };
 }
 
 export function completeTask(task: Task): Task {
@@ -39,7 +52,10 @@ export function moveTask(task: Task, targetColumnId: string): Task {
   return { ...task, columnId: targetColumnId };
 }
 
-export function isOverdue(task: Task, referenceDate: Date = new Date()): boolean {
+export function isOverdue(
+  task: Task,
+  referenceDate: Date = new Date()
+): boolean {
   if (!task.dueDate || task.status === "done") return false;
   return new Date(task.dueDate) < referenceDate;
 }
