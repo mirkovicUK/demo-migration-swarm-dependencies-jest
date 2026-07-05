@@ -1,5 +1,12 @@
+// js/validate.ts — validation via the real npm dependency `zod`.
+// Deliberately the module most worth watching post-migration: zod's
+// inferred-type ergonomics (z.infer<typeof Schema>) only exist in TS,
+// so this file goes from "runtime-checked plain objects" in JS to
+// "a schema that also drives static types" in TS — a realistic,
+// non-trivial type-surface change for the migration engine to produce
+// correctly and for downstream files (task.ts) to consume consistently.
+
 import { z } from "zod";
-import type { Task } from './task.js';
 
 export const PRIORITIES = ["low", "medium", "high"] as const;
 
