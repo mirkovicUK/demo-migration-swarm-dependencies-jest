@@ -1,38 +1,44 @@
-import { addTask, columnView } from "./board.js";
+// js/app.ts — DOM wiring / entry module (→ board, format, storage)
+
+import { addTask, columnView, Board } from "./board.js";
 import { relativeDueDate } from "./format.js";
 import { loadOrCreateBoard, saveBoard } from "./storage.js";
 import { BELL_ICON } from "./theme.js";
 
-async function main() {
+async function main(): Promise<void> {
   const board = await loadOrCreateBoard();
   render(board);
 
-  const form = document.querySelector("#task-form") as HTMLFormElement;
-  form?.addEventListener("submit", (event) => {
+  const form = document.querySelector("#task-form") as HTMLFormElement | null;
+  form?.addEventListener("submit", (event: Event) => {
     event.preventDefault();
-    const formData = new FormData(form);
+    const formData = new FormData(form as HTMLFormElement);
 
     try {
+      const dueDateRaw = formData.get("dueDate");
       const updated = addTask(board, {
         title: formData.get("title"),
         notes: formData.get("notes"),
         priority: formData.get("priority"),
-        dueDate: formData.get("dueDate")
-          ? new Date(formData.get("dueDate")).toISOString()
+        dueDate: dueDateRaw
+          ? new Date(dueDateRaw as string).toISOString()
           : undefined,
-        columnId: board.columns[0].id,
+        columnId: formData.get("columnId") ?? (board.columns[0]?.id ?? ""),
       });
       saveBoard(updated);
       render(updated);
-      form.reset();
-    } catch (err) {
-      // err is unknown; cast to any for message access (original used err.message)
-      showError((err as any).message);
+      (form as HTMLFormElement).reset();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        showError(err.message);
+      } else {
+        showError(String(err));
+      }
     }
   });
 }
 
-function render(board) {
+function render(board: Board): void {
   const root = document.querySelector("#board");
   if (!root) return;
 
@@ -59,7 +65,7 @@ function render(board) {
     .join("");
 }
 
-function showError(message) {
+function showError(message: string): void {
   const el = document.querySelector("#error");
   if (el) el.textContent = message;
 }
