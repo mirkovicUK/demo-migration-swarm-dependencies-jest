@@ -4,11 +4,11 @@
 // filter.js and board.js.
 
 import { newId, newShortRef } from "./id.js";
-import { validateTaskInput, ValidationResult } from "./validate.js";
+import { validateTaskInput } from "./validate.js";
 
-export const STATUSES = ["open", "done"] as const;
+export const STATUSES: ['open', 'done'] = ['open', 'done'];
 
-export type TaskStatus = (typeof STATUSES)[number];
+export type TaskStatus = 'open' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface Task {
@@ -25,19 +25,20 @@ export interface Task {
 }
 
 export function createTask(rawInput: unknown): Task {
-  const result: ValidationResult = validateTaskInput(rawInput);
+  const result = validateTaskInput(rawInput);
   if (!result.success) {
     throw new Error(`Cannot create task: ${result.error}`);
   }
+  const data = result.data;
 
   return {
     id: newId(),
     ref: newShortRef(),
-    title: result.data.title,
-    notes: result.data.notes,
-    priority: result.data.priority,
-    dueDate: result.data.dueDate ?? null,
-    columnId: result.data.columnId,
+    title: data.title,
+    notes: data.notes,
+    priority: data.priority as TaskPriority,
+    dueDate: data.dueDate ?? null,
+    columnId: data.columnId,
     status: "open",
     createdAt: new Date().toISOString(),
   };
