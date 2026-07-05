@@ -4,15 +4,22 @@
 // object the app can render and mutate.
 
 import { newId } from "./id.js";
-import { createTask, completeTask, moveTask, Task, TaskInput } from "./task.js";
+import { Task, TaskInput, createTask, completeTask, moveTask } from "./task.js";
+import { Column } from "./storage.js";
 import { byColumn, sortByDueDate } from "./filter.js";
 import { formatDueDate, dueDateStatus } from "./format.js";
-import { Column } from './storage';
 
-export interface Board { columns: Column[]; tasks: Task[]; }
-export interface TaskView extends Task { dueDateLabel: string; dueDateStatus: string; }
+export interface Board {
+  columns: Column[];
+  tasks: Task[];
+}
 
-export function createBoard(columnNames = ["Backlog", "In Progress", "Done"]): Board {
+export interface TaskView extends Task {
+  dueDateLabel: string;
+  dueDateStatus: string;
+}
+
+export function createBoard(columnNames: string[] = ["Backlog", "In Progress", "Done"]): Board {
   return {
     columns: columnNames.map((name) => ({ id: newId(), name })),
     tasks: [],
