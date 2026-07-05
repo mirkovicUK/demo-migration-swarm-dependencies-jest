@@ -1,9 +1,14 @@
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  resolve: {
-    alias: {
-      "@app/*": "./js/*",
-    },
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": [
+        "./js/*"
+      ]
+    }
   },
-});
+  "include": [
+    "js",
+    "test"
+  ]
+}
