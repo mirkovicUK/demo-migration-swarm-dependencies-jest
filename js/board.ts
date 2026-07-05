@@ -5,15 +5,26 @@
 
 import { newId } from "./id.js";
 import { createTask, completeTask, moveTask } from "./task.js";
+import type { Task } from "./task.js";
 import { byColumn, sortByDueDate } from "./filter.js";
 import { formatDueDate, dueDateStatus } from "./format.js";
-import type { Task } from './task.js';
 
-export interface Column { id: string; name: string; }
-export interface Board { columns: Column[]; tasks: Task[]; }
-export interface TaskView extends Task { dueDateLabel: string; dueDateStatus: string; }
+export interface Column {
+  id: string;
+  name: string;
+}
 
-export function createBoard(columnNames = ["Backlog", "In Progress", "Done"]): Board {
+export interface Board {
+  columns: Column[];
+  tasks: Task[];
+}
+
+export interface TaskView extends Task {
+  dueDateLabel: string;
+  dueDateStatus: string;
+}
+
+export function createBoard(columnNames: string[] = ["Backlog", "In Progress", "Done"]): Board {
   return {
     columns: columnNames.map((name) => ({ id: newId(), name })),
     tasks: [],
