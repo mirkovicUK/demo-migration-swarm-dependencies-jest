@@ -1,28 +1,22 @@
-import { describe, it, expect } from "vitest";
-import { newId, newShortRef, isValidId } from "../js/id.js";
+import { test, expect } from "vitest";
+import { newId, newShortRef, isValidId } from "../js/id";
 
-describe("newId returns a non-empty unique string", () => {
-  it("generates different ids", () => {
-    const a = newId();
-    const b = newId();
-    expect(a).toHaveLengthGreaterThan(0);
-    expect(a).not.toBe(b);
-  });
+test("newId returns a non-empty unique string", () => {
+  const a = newId();
+  const b = newId();
+  expect(a.length > 0).toBe(true);
+  expect(a).not.toBe(b);
 });
 
-describe("newShortRef uses only the safe alphabet, no ambiguous chars", () => {
-  it("generates an 8-character string with safe characters", () => {
-    const ref = newShortRef();
-    expect(ref).toHaveLength(8);
-    expect(ref).toMatch(/^[2-9A-HJ-NP-Z]+$/);
-  });
+test("newShortRef uses only the safe alphabet, no ambiguous chars", () => {
+  const ref = newShortRef();
+  expect(ref.length).toBe(8);
+  expect(ref).toMatch(/^[2-9A-HJ-NP-Z]+$/);
 });
 
-describe("isValidId rejects non-strings and empty strings", () => {
-  it("validates id correctness", () => {
-    expect(isValidId("abc")).toBe(true);
-    expect(isValidId("")).toBe(false);
-    expect(isValidId(null)).toBe(false);
-    expect(isValidId(42)).toBe(false);
-  });
+test("isValidId rejects non-strings and empty strings", () => {
+  expect(isValidId("abc")).toBe(true);
+  expect(isValidId("")).toBe(false);
+  expect(isValidId(null)).toBe(false);
+  expect(isValidId(42)).toBe(false);
 });
