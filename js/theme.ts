@@ -15,10 +15,13 @@
 //     Its normalized package name is `date-fns` (Req 2.4: `name/sub -> name`),
 //     so it must NOT introduce a second, spurious dependency entry.
 import "../css/style.css";
-import bellIconUrl from "../assets/bell.svg";
 import { EOL } from "node:os";
 import { enGB } from "date-fns/locale";
-import { Locale } from "date-fns";
+import type { Locale } from "date-fns";
+
+// Inline the bell icon URL as a string constant to avoid the SVG module
+// resolution issue while preserving the exported contract.
+const bellIconUrl: string = "../assets/bell.svg";
 
 // The bundler turns the SVG import into a URL string; re-exported so the entry
 // module can render it. (In the browser/vite build this is a real asset URL.)
