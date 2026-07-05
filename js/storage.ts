@@ -12,7 +12,7 @@ export function loadBoard(): Board | null {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return null;
   try {
-    return JSON.parse(raw);
+    return JSON.parse(raw) as Board;
   } catch {
     return null;
   }
