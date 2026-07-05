@@ -19,15 +19,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "./js/*"
-      ]
+      "@app/*": ["js/*"]
     }
   },
-  "include": [
-    "js",
-    "test",
-    "src/asset-shims.d.ts"
-  ]
+  "include": ["js", "test"]
 }
