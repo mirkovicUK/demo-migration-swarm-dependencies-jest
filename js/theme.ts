@@ -17,8 +17,8 @@
 import "../css/style.css";
 import bellIconUrl from "../assets/bell.svg";
 import { EOL } from "node:os";
-import { Locale } from 'date-fns';
 import { enGB } from "date-fns/locale";
+import { Locale } from "date-fns";
 
 // The bundler turns the SVG import into a URL string; re-exported so the entry
 // module can render it. (In the browser/vite build this is a real asset URL.)
