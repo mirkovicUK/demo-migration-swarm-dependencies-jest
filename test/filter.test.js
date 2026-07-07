@@ -1,5 +1,5 @@
-import { test } from "node:test";
-import assert from "node:assert/strict";
+// test/filter.test.js — Jest (ESM).
+import { describe, it, expect } from "@jest/globals";
 import {
   byColumn,
   byPriority,
@@ -28,37 +28,35 @@ function sampleTasks() {
   ];
 }
 
-test("byColumn returns only tasks in the given column", () => {
-  const tasks = sampleTasks();
-  const inCol1 = byColumn(tasks, "col-1");
-  assert.equal(inCol1.length, 2);
-  assert.ok(inCol1.every((t) => t.columnId === "col-1"));
-});
+describe("filter", () => {
+  it("byColumn returns only tasks in the given column", () => {
+    const inCol1 = byColumn(sampleTasks(), "col-1");
+    expect(inCol1).toHaveLength(2);
+    expect(inCol1.every((t) => t.columnId === "col-1")).toBe(true);
+  });
 
-test("byPriority filters by exact priority", () => {
-  const tasks = sampleTasks();
-  const high = byPriority(tasks, "high");
-  assert.equal(high.length, 1);
-  assert.equal(high[0].title, "Fix crash on login");
-});
+  it("byPriority filters by exact priority", () => {
+    const high = byPriority(sampleTasks(), "high");
+    expect(high).toHaveLength(1);
+    expect(high[0].title).toBe("Fix crash on login");
+  });
 
-test("bySearchTerm matches title or notes, case-insensitively", () => {
-  const tasks = sampleTasks();
-  assert.equal(bySearchTerm(tasks, "readme").length, 1);
-  assert.equal(bySearchTerm(tasks, "PROD").length, 1);
-  assert.equal(bySearchTerm(tasks, "").length, tasks.length);
-});
+  it("bySearchTerm matches title or notes, case-insensitively", () => {
+    const tasks = sampleTasks();
+    expect(bySearchTerm(tasks, "readme")).toHaveLength(1);
+    expect(bySearchTerm(tasks, "PROD")).toHaveLength(1);
+    expect(bySearchTerm(tasks, "")).toHaveLength(tasks.length);
+  });
 
-test("openOnly excludes completed tasks", () => {
-  const tasks = sampleTasks();
-  const withOneDone = [completeTask(tasks[0]), tasks[1], tasks[2]];
-  const open = openOnly(withOneDone);
-  assert.equal(open.length, 2);
-});
+  it("openOnly excludes completed tasks", () => {
+    const tasks = sampleTasks();
+    const withOneDone = [completeTask(tasks[0]), tasks[1], tasks[2]];
+    expect(openOnly(withOneDone)).toHaveLength(2);
+  });
 
-test("sortByDueDate puts tasks without a due date last", () => {
-  const tasks = sampleTasks();
-  const sorted = sortByDueDate(tasks);
-  assert.equal(sorted.at(-1).title, "Write README");
-  assert.equal(sorted[0].title, "Refactor board.js");
+  it("sortByDueDate puts tasks without a due date last", () => {
+    const sorted = sortByDueDate(sampleTasks());
+    expect(sorted.at(-1).title).toBe("Write README");
+    expect(sorted[0].title).toBe("Refactor board.js");
+  });
 });

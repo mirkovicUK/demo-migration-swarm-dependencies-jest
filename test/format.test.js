@@ -1,37 +1,43 @@
-import { test } from "node:test";
-import assert from "node:assert/strict";
-import {
-  formatDueDate,
-  dueDateStatus,
-  relativeDueDate,
-} from "../js/format.js";
+// test/format.test.js — Jest (ESM). Uses Jest-specific fake timers
+// (jest.useFakeTimers / jest.setSystemTime / jest.useRealTimers), so the
+// migration must convert them to the Vitest equivalents (vi.useFakeTimers etc.).
+import { describe, it, expect, jest, afterEach } from "@jest/globals";
+import { formatDueDate, dueDateStatus, relativeDueDate } from "../js/format.js";
 
-test("formatDueDate returns a placeholder when no date is given", () => {
-  assert.equal(formatDueDate(null), "No due date");
-  assert.equal(formatDueDate(undefined), "No due date");
-});
+describe("format", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
-test("formatDueDate formats a real ISO string", () => {
-  const label = formatDueDate("2026-01-15T09:30:00Z");
-  assert.match(label, /2026/);
-  assert.match(label, /Jan/);
-});
+  it("formatDueDate returns a placeholder when no date is given", () => {
+    expect(formatDueDate(null)).toBe("No due date");
+    expect(formatDueDate(undefined)).toBe("No due date");
+  });
 
-test("dueDateStatus reports overdue for past dates", () => {
-  assert.equal(dueDateStatus("2000-01-01T00:00:00Z"), "overdue");
-});
+  it("formatDueDate formats a real ISO string", () => {
+    const label = formatDueDate("2026-01-15T09:30:00Z");
+    expect(label).toMatch(/2026/);
+    expect(label).toMatch(/Jan/);
+  });
 
-test("dueDateStatus reports upcoming for future dates", () => {
-  const future = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString();
-  assert.equal(dueDateStatus(future), "upcoming");
-});
+  it("dueDateStatus reports overdue for past dates", () => {
+    expect(dueDateStatus("2000-01-01T00:00:00Z")).toBe("overdue");
+  });
 
-test("dueDateStatus reports none when no date is given", () => {
-  assert.equal(dueDateStatus(null), "none");
-});
+  it("dueDateStatus reports upcoming for a future date (fake clock)", () => {
+    // Freeze "now" so the future date is deterministic (Jest fake timers).
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date("2025-01-01T00:00:00Z"));
+    expect(dueDateStatus("2025-06-01T00:00:00Z")).toBe("upcoming");
+  });
 
-test("relativeDueDate includes a direction suffix", () => {
-  const future = new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString();
-  const label = relativeDueDate(future);
-  assert.match(label, /from now/);
+  it("dueDateStatus reports none when no date is given", () => {
+    expect(dueDateStatus(null)).toBe("none");
+  });
+
+  it("relativeDueDate includes a direction suffix (fake clock)", () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date("2025-01-01T00:00:00Z"));
+    expect(relativeDueDate("2025-01-04T00:00:00Z")).toMatch(/from now/);
+  });
 });

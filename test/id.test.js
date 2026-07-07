@@ -1,23 +1,26 @@
-import { test } from "node:test";
-import assert from "node:assert/strict";
+// test/id.test.js — Jest (ESM). APIs imported from @jest/globals so this repo
+// exercises the migrator's Jest -> Vitest test conversion.
+import { describe, it, expect } from "@jest/globals";
 import { newId, newShortRef, isValidId } from "../js/id.js";
 
-test("newId returns a non-empty unique string", () => {
-  const a = newId();
-  const b = newId();
-  assert.ok(a.length > 0);
-  assert.notEqual(a, b);
-});
+describe("id", () => {
+  it("newId returns a non-empty unique string", () => {
+    const a = newId();
+    const b = newId();
+    expect(a.length).toBeGreaterThan(0);
+    expect(a).not.toBe(b);
+  });
 
-test("newShortRef uses only the safe alphabet, no ambiguous chars", () => {
-  const ref = newShortRef();
-  assert.equal(ref.length, 8);
-  assert.match(ref, /^[2-9A-HJ-NP-Z]+$/);
-});
+  it("newShortRef uses only the safe alphabet, no ambiguous chars", () => {
+    const ref = newShortRef();
+    expect(ref).toHaveLength(8);
+    expect(ref).toMatch(/^[2-9A-HJ-NP-Z]+$/);
+  });
 
-test("isValidId rejects non-strings and empty strings", () => {
-  assert.equal(isValidId("abc"), true);
-  assert.equal(isValidId(""), false);
-  assert.equal(isValidId(null), false);
-  assert.equal(isValidId(42), false);
+  it("isValidId rejects non-strings and empty strings", () => {
+    expect(isValidId("abc")).toBe(true);
+    expect(isValidId("")).toBe(false);
+    expect(isValidId(null)).toBe(false);
+    expect(isValidId(42)).toBe(false);
+  });
 });

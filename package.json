@@ -1,16 +1,20 @@
 {
-  "name": "demo-migration-swarm-deps",
+  "name": "demo-migration-swarm-dependencies-jest",
   "version": "1.0.0",
-  "description": "Fixed demo repository (vanilla HTML/CSS/JS, with real npm dependencies) for validating Migration Swarm's dependency-aware scaffold.",
+  "description": "Fixed demo repository (vanilla HTML/CSS/JS, real npm dependencies, Jest test suite) for validating Migration Swarm's dependency-aware scaffold and its Jest -> Vitest test migration.",
   "type": "module",
   "main": "js/index.js",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "license": "MIT",
   "dependencies": {
     "date-fns": "^4.4.0",
     "nanoid": "^5.1.16",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@jest/globals": "^29.7.0"
   }
 }
