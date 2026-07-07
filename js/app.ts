@@ -1,35 +1,37 @@
-import { addTask, columnView, type Board } from "./board.js";
+// js/app.ts — DOM wiring / entry module (→ board, format, storage)
+
+import { addTask, columnView } from "./board.js";
+import type { Board } from "./board.js";
 import { relativeDueDate } from "./format.js";
 import { loadOrCreateBoard, saveBoard } from "./storage.js";
 import { BELL_ICON } from "./theme.js";
 
 async function main(): Promise<void> {
-  const board = await loadOrCreateBoard();
+  const board = (await loadOrCreateBoard()) as Board;
   render(board);
 
-  const form = document.querySelector("#task-form") as HTMLFormElement;
-  form?.addEventListener("submit", (event) => {
+  const form = document.querySelector("#task-form") as HTMLFormElement | null;
+  form?.addEventListener("submit", (event: Event) => {
     event.preventDefault();
-    const formData = new FormData(form);
+    const formData = new FormData(form!);
 
     try {
+      const dueDateValue = formData.get("dueDate");
       const updated = addTask(board, {
-        title: formData.get("title") as string,
-        notes: formData.get("notes") as string,
-        priority: formData.get("priority") as string,
+        title: formData.get("title"),
+        notes: formData.get("notes"),
+        priority: formData.get("priority"),
         dueDate:
-          formData.get("dueDate") !== null
-            ? new Date(formData.get("dueDate") as string).toISOString()
+          dueDateValue
+            ? new Date(dueDateValue as string).toISOString()
             : undefined,
         columnId: board.columns[0].id,
       });
       saveBoard(updated);
       render(updated);
-      form.reset();
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : String(err);
-      showError(message);
+      form!.reset();
+    } catch (err) {
+      showError((err as Error).message);
     }
   });
 }
