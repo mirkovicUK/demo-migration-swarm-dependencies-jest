@@ -1,4 +1,3 @@
-// test/validate.test.ts — Vitest (ESM).
 import { describe, it, expect } from "vitest";
 import { validateTaskInput } from "../js/validate.js";
 
