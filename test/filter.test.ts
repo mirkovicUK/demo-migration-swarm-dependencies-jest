@@ -56,7 +56,9 @@ describe("filter", () => {
 
   it("sortByDueDate puts tasks without a due date last", () => {
     const sorted = sortByDueDate(sampleTasks());
-    expect(sorted.at(-1).title).toBe("Write README");
-    expect(sorted[0].title).toBe("Refactor board.js");
+    const last = sorted.at(-1);
+    const first = sorted[0];
+    expect(last?.title).toBe("Write README");
+    expect(first?.title).toBe("Refactor board.js");
   });
 });
