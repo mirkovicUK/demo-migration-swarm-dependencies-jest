@@ -1,11 +1,11 @@
 // js/task.ts — Task model (→ id, validate)
 // Sits in the middle of the dependency chain: consumes the HOT id
 // module and the zod-backed validator, and is itself consumed by
-// filter.ts and board.ts.
+// filter.js and board.js.
 
 import { newId, newShortRef } from "./id.js";
 import { validateTaskInput } from "./validate.js";
-import type { TaskInput } from "./validate.js";
+import type { ValidateSuccess } from "./validate.js";
 
 export const STATUSES = ["open", "done"] as const;
 
@@ -17,16 +17,17 @@ export interface Task {
   priority: string;
   dueDate: string | null;
   columnId: string;
-  status: "open" | "done";
+  status: string;
   createdAt: string;
   completedAt?: string;
 }
 
 export function createTask(rawInput: unknown): Task {
-  const { success, data, error } = validateTaskInput(rawInput);
-  if (!success) {
-    throw new Error(`Cannot create task: ${error}`);
+  const result = validateTaskInput(rawInput);
+  if (!result.success) {
+    throw new Error(`Cannot create task: ${result.error}`);
   }
+  const { data } = result as ValidateSuccess;
 
   return {
     id: newId(),
@@ -52,10 +53,7 @@ export function moveTask(task: Task, targetColumnId: string): Task {
   return { ...task, columnId: targetColumnId };
 }
 
-export function isOverdue(
-  task: Task,
-  referenceDate: Date = new Date()
-): boolean {
+export function isOverdue(task: Task, referenceDate: Date = new Date()): boolean {
   if (!task.dueDate || task.status === "done") return false;
   return new Date(task.dueDate) < referenceDate;
 }
