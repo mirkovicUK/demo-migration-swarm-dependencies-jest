@@ -1,14 +1,12 @@
 // js/task.ts — Task model (→ id, validate)
 // Sits in the middle of the dependency chain: consumes the HOT id
 // module and the zod-backed validator, and is itself consumed by
-// filter.ts and board.ts.
+// filter.js and board.js.
 
 import { newId, newShortRef } from "./id.js";
-import { validateTaskInput, type TaskInput } from "./validate.js";
+import { validateTaskInput } from "./validate.js";
 
-export const STATUSES = ["open", "done"] as const;
-
-export type TaskStatus = (typeof STATUSES)[number];
+export type TaskStatus = "open" | "done";
 
 export interface Task {
   id: string;
@@ -23,12 +21,15 @@ export interface Task {
   completedAt?: string;
 }
 
+export const STATUSES: string[] = ["open", "done"];
+
 export function createTask(rawInput: Record<string, unknown>): Task {
-  const { success, data, error } = validateTaskInput(rawInput);
-  if (!success) {
-    throw new Error(`Cannot create task: ${error}`);
+  const result = validateTaskInput(rawInput);
+  if (!result.success) {
+    throw new Error(`Cannot create task: ${result.error}`);
   }
 
+  const data = result.data;
   return {
     id: newId(),
     ref: newShortRef(),
@@ -53,10 +54,7 @@ export function moveTask(task: Task, targetColumnId: string): Task {
   return { ...task, columnId: targetColumnId };
 }
 
-export function isOverdue(
-  task: Task,
-  referenceDate: Date = new Date()
-): boolean {
+export function isOverdue(task: Task, referenceDate: Date = new Date()): boolean {
   if (!task.dueDate || task.status === "done") return false;
   return new Date(task.dueDate) < referenceDate;
 }
