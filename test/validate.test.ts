@@ -1,20 +1,27 @@
 // test/validate.test.ts — Vitest (ESM).
 import { describe, it, expect } from "vitest";
 import { validateTaskInput } from "../js/validate.js";
+import type { ValidateSuccess, ValidateFailure } from "../js/validate.js";
 
 describe("validateTaskInput", () => {
   it("accepts a minimal valid task", () => {
     const result = validateTaskInput({ title: "Write tests", columnId: "col-1" });
     expect(result.success).toBe(true);
-    expect(result.data.title).toBe("Write tests");
-    expect(result.data.priority).toBe("medium");
-    expect(result.data.notes).toBe("");
+    if (result.success) {
+      const success = result as ValidateSuccess;
+      expect(success.data.title).toBe("Write tests");
+      expect(success.data.priority).toBe("medium");
+      expect(success.data.notes).toBe("");
+    }
   });
 
   it("rejects a missing title", () => {
     const result = validateTaskInput({ columnId: "col-1" });
     expect(result.success).toBe(false);
-    expect(result.error).toMatch(/title/);
+    if (!result.success) {
+      const failure = result as ValidateFailure;
+      expect(failure.error).toMatch(/title/);
+    }
   });
 
   it("rejects an invalid priority", () => {
