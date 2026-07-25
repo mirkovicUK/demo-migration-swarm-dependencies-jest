@@ -1,3 +1,4 @@
+// test/filter.test.ts — Vitest (ESM).
 import { describe, it, expect } from "vitest";
 import {
   byColumn,
@@ -55,7 +56,9 @@ describe("filter", () => {
 
   it("sortByDueDate puts tasks without a due date last", () => {
     const sorted = sortByDueDate(sampleTasks());
-    expect(sorted.at(-1).title).toBe("Write README");
+    const last = sorted[sorted.length - 1];
+    expect(last).toBeDefined();
+    expect(last!.title).toBe("Write README");
     expect(sorted[0].title).toBe("Refactor board.js");
   });
 });
