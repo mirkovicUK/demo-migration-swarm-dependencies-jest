@@ -1,6 +1,4 @@
-// test/id.test.js — Jest (ESM). APIs imported from @jest/globals so this repo
-// exercises the migrator's Jest -> Vitest test conversion.
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import { newId, newShortRef, isValidId } from "../js/id.js";
 
 describe("id", () => {

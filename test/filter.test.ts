@@ -1,5 +1,4 @@
-// test/filter.test.js — Jest (ESM).
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import {
   byColumn,
   byPriority,

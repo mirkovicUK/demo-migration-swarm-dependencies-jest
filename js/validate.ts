@@ -8,7 +8,7 @@
 
 import { z } from "zod";
 
-export const PRIORITIES = ["low", "medium", "high"];
+export const PRIORITIES = ["low", "medium", "high"] as const;
 
 export const TaskInputSchema = z.object({
   title: z.string().trim().min(1, "title is required").max(120),
@@ -18,17 +18,19 @@ export const TaskInputSchema = z.object({
   columnId: z.string().min(1, "columnId is required"),
 });
 
-// Returns { success, data } or { success: false, error } — mirrors
-// zod's own `safeParse` shape so callers don't need to know it's zod.
-export function validateTaskInput(raw) {
+type TaskInput = z.infer<typeof TaskInputSchema>;
+
+export function validateTaskInput(raw: unknown) {
   const result = TaskInputSchema.safeParse(raw);
   if (!result.success) {
-    return { success: false, error: formatZodError(result.error) };
+    return { success: false, error: formatZodError(result.error) } as const;
   }
-  return { success: true, data: result.data };
+  return { success: true, data: result.data } as const;
 }
 
-function formatZodError(zodError) {
+type ZodErrorResult = ReturnType<typeof validateTaskInput>;
+
+export function formatZodError(zodError: z.ZodError) {
   return zodError.issues
     .map((issue) => `${issue.path.join(".") || "(value)"}: ${issue.message}`)
     .join("; ");

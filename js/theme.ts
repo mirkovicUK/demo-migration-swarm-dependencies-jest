@@ -1,4 +1,4 @@
-// js/theme.js — theming / presentation helpers.
+// js/theme.ts — theming / presentation helpers.
 //
 // This module exists mainly to widen the dependency-aware-scaffold coverage
 // of the demo repo. It exercises, in one real module:
@@ -21,14 +21,14 @@ import { enGB } from "date-fns/locale";
 
 // The bundler turns the SVG import into a URL string; re-exported so the entry
 // module can render it. (In the browser/vite build this is a real asset URL.)
-export const BELL_ICON = bellIconUrl;
+export const BELL_ICON: string = bellIconUrl;
 
 // A concrete date-fns locale, proving the subpath import resolves to the same
 // installed `date-fns` package the rest of the app already depends on.
-export const DATE_LOCALE = enGB;
+export const DATE_LOCALE: any = enGB;
 
 // Join lines with the platform newline from the node builtin, so the builtin
 // import is actually used (not dead code the migrator might drop).
-export function banner(lines) {
+export function banner(lines: string[]): string {
   return lines.join(EOL);
 }
