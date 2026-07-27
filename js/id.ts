@@ -12,14 +12,14 @@ import { nanoid, customAlphabet } from "nanoid";
 const SAFE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const shortId = customAlphabet(SAFE_ALPHABET, 8);
 
-export function newId() {
+export function newId(): string {
   return nanoid();
 }
 
-export function newShortRef() {
+export function newShortRef(): string {
   return shortId();
 }
 
-export function isValidId(value) {
+export function isValidId(value: any): boolean {
   return typeof value === "string" && value.length > 0;
 }

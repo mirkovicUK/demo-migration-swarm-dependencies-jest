@@ -1,44 +1,49 @@
-// js/app.js — DOM wiring / entry module (→ board, format, storage)
+// js/app.ts — DOM wiring / entry module (→ board, format, storage)
 
 import { addTask, columnView } from "./board.js";
 import { relativeDueDate } from "./format.js";
 import { loadOrCreateBoard, saveBoard } from "./storage.js";
 import { BELL_ICON } from "./theme.js";
 
-async function main() {
+export async function main(): Promise<void> {
   const board = await loadOrCreateBoard();
   render(board);
 
-  const form = document.querySelector("#task-form");
+  const form = document.querySelector<HTMLFormElement>("#task-form");
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
     const formData = new FormData(form);
 
     try {
       const updated = addTask(board, {
-        title: formData.get("title"),
-        notes: formData.get("notes"),
-        priority: formData.get("priority"),
-        dueDate: formData.get("dueDate")
-          ? new Date(formData.get("dueDate")).toISOString()
-          : undefined,
+        title: formData.get("title") as string,
+        notes: formData.get("notes") as string | null,
+        priority: formData.get("priority") as string,
+        dueDate:
+          formData.get("dueDate") !== null
+            ? new Date(formData.get("dueDate") as string).toISOString()
+            : undefined,
         columnId: board.columns[0].id,
       });
       saveBoard(updated);
       render(updated);
       form.reset();
     } catch (err) {
-      showError(err.message);
+      if (err instanceof Error) {
+        showError(err.message);
+      } else {
+        showError(String(err));
+      }
     }
   });
 }
 
-function render(board) {
+export function render(board: any): void {
   const root = document.querySelector("#board");
   if (!root) return;
 
   root.innerHTML = board.columns
-    .map((column) => {
+    .map((column: any) => {
       const tasks = columnView(board, column.id);
       return `
         <section class="column">
@@ -46,7 +51,7 @@ function render(board) {
           <ul>
             ${tasks
               .map(
-                (task) => `
+                (task: any) => `
               <li class="task priority-${task.priority}">
                 <strong>${task.title}</strong>
                 <span class="due ${task.dueDateStatus}">${task.dueDateLabel}</span>
@@ -60,7 +65,7 @@ function render(board) {
     .join("");
 }
 
-function showError(message) {
+export function showError(message: string): void {
   const el = document.querySelector("#error");
   if (el) el.textContent = message;
 }

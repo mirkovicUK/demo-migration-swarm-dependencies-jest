@@ -1,14 +1,13 @@
-// test/validate.test.js — Jest (ESM).
-import { describe, it, expect } from "@jest/globals";
-import { validateTaskInput } from "../js/validate.js";
+import { describe, it, expect } from "vitest";
+import { validateTaskInput } from "../js/validate";
 
 describe("validateTaskInput", () => {
   it("accepts a minimal valid task", () => {
     const result = validateTaskInput({ title: "Write tests", columnId: "col-1" });
     expect(result.success).toBe(true);
-    expect(result.data.title).toBe("Write tests");
-    expect(result.data.priority).toBe("medium");
-    expect(result.data.notes).toBe("");
+    expect(result.data!.title).toBe("Write tests");
+    expect(result.data!.priority).toBe("medium");
+    expect(result.data!.notes).toBe("");
   });
 
   it("rejects a missing title", () => {

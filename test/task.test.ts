@@ -1,6 +1,5 @@
-// test/task.test.js — Jest (ESM).
-import { describe, it, expect } from "@jest/globals";
-import { createTask, completeTask, moveTask, isOverdue } from "../js/task.js";
+import { describe, it, expect } from "vitest";
+import { createTask, completeTask, moveTask, isOverdue } from "../js/task";
 
 describe("task", () => {
   it("createTask builds a task with a generated id and ref", () => {

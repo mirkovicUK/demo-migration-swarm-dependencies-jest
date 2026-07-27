@@ -1,4 +1,4 @@
-// js/storage.js — localStorage persistence + dynamic import (→ index barrel)
+// js/storage.ts — localStorage persistence + dynamic import (→ index barrel)
 // Same pattern as the first demo: reaches the app's functions through
 // a dynamic import() of the barrel rather than static imports, so the
 // migration engine's import-graph parser has to handle a dynamic
@@ -6,7 +6,7 @@
 
 const STORAGE_KEY = "task-board:v1";
 
-export function loadBoard() {
+export function loadBoard(): any | null {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return null;
   try {
@@ -16,11 +16,11 @@ export function loadBoard() {
   }
 }
 
-export function saveBoard(board) {
+export function saveBoard(board: any): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(board));
 }
 
-export async function loadOrCreateBoard() {
+export async function loadOrCreateBoard(): Promise<any> {
   const existing = loadBoard();
   if (existing) return existing;
 
